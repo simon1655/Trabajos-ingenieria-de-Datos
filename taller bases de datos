@@ -1,73 +1,130 @@
-CREATE DATABASE techcorp2;
-USE techcorp;
+CREATE DATABASE techcorp3;
+USE techcorp3;
 
 -- Creación de la tabla de departamentos
-CREATE TABLE departments1 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+CREATE TABLE Departamento (
+    idDepartamento INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL
 );
 
--- Creación de la tabla de empleados con la clave foránea a departamentos
-CREATE TABLE employees2 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    age INT NOT NULL,
-    salary DECIMAL(10,2) NOT NULL,
-    hire_date DATE NOT NULL,
-    department_id INT,
-    FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL ON UPDATE CASCADE
+-- Creación de la tabla de empleados 
+CREATE TABLE Empleado (
+    idEmpleado INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    edad INT NOT NULL,
+    salario DECIMAL(10,2) NOT NULL,
+    fechaContratacion DATE NOT NULL,
+    idDepartamentoFK int,
+	idCargoFK VARCHAR(30)
+);
+CREATE table Cargo (
+	idCargo VARCHAR(30) PRIMARY KEY,
+	nombreCargo VARCHAR(50) NOT NULL,
+	rangoCargo VARCHAR(50) NOT NULL,
+	descripcionCargo VARCHAR(60) NOT NULL    
 );
 
+alter table Empleado add constraint FKDepartamnetoEmpleado foreign key (idDepartamentoFK) references Departamento (idDepartamento);
+alter table Empleado add constraint FKCargoEmpleado foreign key (idCargoFK) references Cargo (idCargo);
+alter table Empleado RENAME COLUMN nombre TO nombreEmpleado;
+
+/*un cargo tiene uno a muchos empleados*/
+/*inserciones en cargo*/
+INSERT INTO Cargo (idCargo, nombreCargo, rangoCargo, descripcionCargo) values ("4723","Programador", "3", "Programador de nivel medio o avanzado"),
+("1589", "Analista de Sistemas", "2", "Responsable de analizar y diseñar soluciones tecnológicas, así como realizar pruebas y seguimiento de sistemas."),
+("3945", "Desarrollador Web", "3", "Desarrollador con experiencia en tecnologías web, encargado de crear y mantener aplicaciones web con estándares de calidad."),
+("6210", "Arquitecto de Software", "4", "Responsable de diseñar la arquitectura de software, liderar equipos de desarrollo y garantizar la calidad y escalabilidad del sistema."),
+("8041", "Tester de Calidad", "2", "Encargado de realizar pruebas de software para asegurar su correcto funcionamiento y detectar errores antes del lanzamiento."),
+("4027", "vendedor", "2", "Encargado de realizar las ventas de los productos.");
+insert into Cargo value("5231", "diseñador", "1", "se encarga de realizar la publicidad para la empresa.");
+
+/*consulta de los cargos con un rango especifico*/
+SELECT * FROM Cargo WHERE rangoCargo = '3';
+/*mostrar en pantalla los empleados que tengan un cargo especifico*/
+SELECT idEmpleado, nombre FROM Empleado JOIN Cargo ON idCargoFK = idCargo WHERE nombreCargo = 'Programador';
+
+/*mostrar todos los empleados con antiguedad de mas de 3 años, departamento, cargo y salario*/
+
+/*mostrar toda la informacion de un empleado, nombre, fecha de contratacion, departamento donde esta contratado, años de antiguedad, cargo actualmente y rango del cargo */
+
+/*todos los departamentos que no tengan empleados asignados*/
+SELECT idDepartamento, nombre AS NombreDepartamento FROM Departamento LEFT JOIN Empleado  ON idDepartamento = idDepartamentoFK WHERE idEmpleado IS NULL;
+
+/*mostrar todos los cargos que no tengan un empleado asignado*/
+SELECT idCargo, nombreCargo, rangoCargo, descripcionCargo FROM Cargo LEFT JOIN Empleado  ON idCargo = idCargoFK WHERE idEmpleado IS NULL;
+
+
+
+select * from Departamento;
+select * from Cargo;
+select * from Empleado;
 -- Inserción de datos en la tabla de departamentos
-INSERT INTO departments (name) VALUES ('IT'), ('Ventas'), ('Recursos Humanos'), ('Finanzas'), ('Marketing');
+INSERT INTO Departamento (nombre) VALUES ('IT'), ('Ventas'), ('Recursos Humanos'), ('Finanzas'), ('Marketing');
 
 -- Inserción de datos en la tabla de empleados
-INSERT INTO employees (first_name, last_name, age, salary, hire_date, department_id) VALUES
-('Ana', 'Gomez', 28, 3500.00, '2019-06-15', 1),
-('Carlos', 'Martinez', 34, 4200.00, '2018-04-10', 2),
-('Beatriz', 'Lopez', 40, 3800.00, '2021-07-22', 3),
-('David', 'Fernandez', 45, 5000.00, '2015-09-30', 4),
-('Elena', 'Ruiz', 29, 3100.00, '2022-02-14', 5),
-('Fernando', 'Sanchez', 38, 4500.00, '2017-12-05', 2),
-('Gabriela', 'Torres', 32, 2900.00, '2023-01-08', 1),
-('Hugo', 'Diaz', 41, 5200.00, '2014-06-20', 4),
-('Isabel', 'Ramirez', 35, 4100.00, '2019-11-25', 3),
-('Javier', 'Castro', 30, 2800.00, '2021-09-12', 5);
+INSERT INTO Empleado (nombre, edad, salario, fechaContratacion, idDepartamentoFK, idCargoFK) VALUES
+('Ana', 28, 3500.00, '2019-06-15', 1, "1589"),
+('Carlos', 34, 4200.00, '2018-04-10', 1, "3945"),
+('David', 45, 5000.00, '2015-09-30', 1, "6210"),
+('Elena', 29, 3100.00, '2022-02-14', 1, "8041"),
+('Isabel', 35, 4100.00, '2019-11-25', 1, "4723"),
+('Javier', 30, 2800.00, '2021-09-12', 2, "4027");
 
 -- Consulta: 1. Lista de empleados: Obtén los nombres, edades y salarios de todos los empleados
-SELECT first_name, last_name, age, salary FROM employees;
+SELECT nombre, salario FROM Empleado;
 
 -- Consulta: 2. Altos ingresos: ¿Quiénes son los empleados que ganan más de $4,000?
-SELECT first_name, last_name, salary FROM employees WHERE salary > 4000;
+SELECT nombre, salario FROM Empleado WHERE salario > 4000;
 
 -- Consulta: 3. Fuerza de ventas: Extrae la lista de empleados que trabajan en el departamento de Ventas
-SELECT e.first_name, e.last_name FROM employees e
-JOIN departments d ON e.department_id = d.id
+SELECT e.nombre FROM Empleados e
+JOIN Departamento d ON e.idDepartamento = d.id
 WHERE d.name = 'Ventas';
 
 -- Consulta: 4. Rango de edad: Encuentra a los empleados que tienen entre 30 y 40 años
-SELECT first_name, last_name, age FROM employees WHERE age BETWEEN 30 AND 40;
+SELECT nombre, edad FROM Empleado WHERE edad BETWEEN 30 AND 40;
 
 -- Consulta: 5. Nuevas contrataciones: ¿Quiénes han sido contratados después del año 2020?
-SELECT first_name, last_name, hire_date FROM employees WHERE YEAR(hire_date) > 2020;
+SELECT nombre, fechaContratacion FROM Empleado WHERE YEAR(fechaContratacion) > 2020;
 
 -- Consulta: 6. Distribución de empleados: ¿Cuántos empleados hay en cada departamento?
-SELECT d.name AS department, COUNT(e.id) AS num_employees
-FROM employees e
-JOIN departments d ON e.department_id = d.id
-GROUP BY d.name;
+SELECT d.nombre AS Departamento, COUNT(e.idEmpleado) AS num_Empleado
+FROM Empleado e
+JOIN Departamneto d ON e.idDepartamneto = d.idEmpleado
+GROUP BY d.nombre;
 
 -- Consulta: 7. Análisis salarial: ¿Cuál es el salario promedio en la empresa?
-SELECT AVG(salary) AS average_salary FROM employees;
+SELECT AVG(salario) AS promedioSalario FROM Empleado;
 
 -- Consulta: 8. Nombres selectivos: Muestra los empleados cuyos nombres comienzan con "A" o "C"
-SELECT first_name, last_name FROM employees WHERE first_name LIKE 'A%' OR first_name LIKE 'C%';
+SELECT nombre FROM employees WHERE nombre LIKE 'A%' OR nombre LIKE 'C%';
 
 -- Consulta: 9. Departamentos específicos: Encuentra a los empleados que no pertenecen al departamento de IT
-SELECT e.first_name, e.last_name FROM employees e
-JOIN departments d ON e.department_id = d.id
-WHERE d.name <> 'IT';
+SELECT enombre FROM employees e
+JOIN Departamento d ON e.idDePARTAMNETO = d.idEmpleado
+WHERE d.nombre <> 'IT';
 
 -- Consulta: 10. El mejor pagado: ¿Quién es el empleado con el salario más alto?
-SELECT first_name, last_name, salary FROM employees ORDER BY salary DESC LIMIT 1;
+SELECT nombre, salary FROM Empleado ORDER BY salario DESC LIMIT 1;
+
+
+select *  from Empleado where idDepartamento in (Departamento);
+
+select * from Empleado order by salario desc;
+
+select * from Empleado where idEmpleado is null;
+
+
+select *, (2025 - fechaContratacion) from Empleado;
+
+
+select count(nombre) as "empleados que ganan mas del salario promedio" from Empleado where salario > (select avg(salario) from Empleado);
+
+select salario, fechaContratacion from Empleado;
+
+
+
+
+
+
+
