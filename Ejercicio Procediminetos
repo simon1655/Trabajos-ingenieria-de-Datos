@@ -103,5 +103,78 @@ CALL ConsultarVacunas(2);
 call InsertarMascota(3, 'max', 'Macho', 'Pastor Alemán', 1,'201', 'Rabia');
 
 
+/*vistas, consultas almacenadas
+create view nombreVista as
+select valoresConsultar from nombreTabla where condiciones
+para ejecutar se realiza una consulta de la vista
+para modificar una vista 
+alter view nombreVista as
+select valoresConsultar from nombreTabla where condiciones;
+eliminar vista
+drop view nombreVista
+*/
+
+create view vistaCliente as
+select * from cliente where cedulaCliente=1234567890;
+select * from vistaCliente;
 
 
+create view vistaTelefono as
+select * from cliente where Telefono between '4' and '6' and '7';
+select * from vistaTelefono;
+
+alter view vistaTelefono as
+select * from cliente where telefono like '%4%' and telefono like '%6%' and telefono like '%7%';
+select * from vistaTelefono;
+
+/*disparadores o triggers, desencadenador
+create trigger nombreTrigger
+after insert on nombreTabla
+for each row
+begin
+--instrucciones sql
+end//
+delimeter;
+*/
+
+create table Consolidado(
+idMascota int primary key,
+nombreMascota varchar (15),
+generoMascota varchar (15),
+razaMascota varchar (15),
+cantidad int (10)
+);
+
+DELIMITER //
+create trigger registrarConsolidadMascota
+after insert on Mascota
+for each row
+begin
+	insert into Consolidado values(new.idMascota, new.nombreMascota, new.generoMascota, new.razaMascota, new.cantidad);
+END   //
+DELIMITER ;
+
+INSERT INTO Mascota (idMascota, nombreMascota, generoMascota, razaMascota, cantidad)
+VALUES (5, 'alfa', 'Macho', 'Pastor Alemán', 1);
+select * from Consolidado;
+
+create table clienteEliminado(
+cedulaCliente int primary key,
+nombreCliente varchar (15),
+apellidoCliente varchar (15),
+direccionCliente varchar (10),
+telefono int (10),
+idMascotaFK int
+);
+
+
+DELIMITER //
+create trigger registrarClienteEliminado
+before delete on Cliente
+for each row
+begin
+	insert into clienteEliminado values(old.cedulaCliente, old.nombreCliente, old.apellidoCliente, old.direccionCliente, old.telefono, old.idMascotaFK);
+END   //
+DELIMITER ;
+
+DELETE FROM Cliente where nombreCliente='Juan';
