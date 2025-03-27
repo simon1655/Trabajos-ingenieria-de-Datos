@@ -60,6 +60,18 @@ foreign key (codigoVacunaFK)
 references Vacuna(codigoVacuna);
 
 
+INSERT INTO Mascota (idMascota, nombreMascota, generoMascota, razaMascota, cantidad)
+VALUES (1, 'Rex', 'Macho', 'Pastor Alemán', 1), (2, 'Mía', 'Hembra', 'Persa', 1);
+
+INSERT INTO Cliente (cedulaCliente, nombreCliente, apellidoCliente, direccionCliente, telefono, idMascotaFK)
+VALUES (1234567890, 'Juan', 'Pérez', 'Calle 1', 1234567890, 1), (9876543210, 'Ana', 'López', 'Calle 2', 9876543210, 2);
+
+INSERT INTO Producto (codigoProducto, nombreProducto, marca, precio, cedulaClienteFK)
+VALUES (101, 'Alimento Perro', 'Pedigree', 15.5, 1234567890), (102, 'Collar Gato', 'PetSmart', 8.0, 9876543210);
+
+INSERT INTO Vacuna (codigoVacuna, nombreVacuna, dosisVacuna, enfermedad)
+VALUES (201, 'Antirrábica', 1, 'Rabia'), (202, 'Leptospirosis', 2, 'Leptospirosis');
+
 DELIMITER //
 CREATE PROCEDURE InsertarMascota(IN idMascota INT, IN nombreMascota VARCHAR(15), IN generoMascota VARCHAR(15), IN razaMascota VARCHAR(15), IN cantidad INT, IN codigoVacuna INT, IN enfermedad VARCHAR(15))
 BEGIN
@@ -73,18 +85,23 @@ BEGIN
     
 END //
 DELIMITER ;
-
+select * from Mascota;
+select * from Vacuna;
 /*procedimiento que vacunas se le han aplicado a una mascota y que enfermedad esta atacando*/
+-- crear procedimiento consultar las vacunas que se le ha aplicado a una mascota y que enfermedad esta atacando
+
 DELIMITER //
-CREATE PROCEDURE ConsultarVacunasMascota(
-    IN idMascota INT
-)
+CREATE PROCEDURE ConsultarVacunas(in idMascotaConsulta int)
 BEGIN
-    
-    SELECT v.nombreVacuna, mv.enfermedad
-    FROM Mascota m
-    JOIN Mascota_Vacuna mv ON m.idMascota = mv.idMascotaFK
-    JOIN Vacuna v ON mv.codigoVacunaFK = v.codigoVacuna
-    WHERE m.idMascota = idMascota;
+	select vacuna.nombreVacuna, mascota_vacuna.enfermedad from mascota_vacuna
+    join vacuna on mascota_vacuna.codigoVacunaFK  = vacuna.codigoVacuna
+    join mascota on mascota_vacuna.idMascotaFK  = mascota.idMascota;
 END //
 DELIMITER ;
+
+CALL ConsultarVacunas(2);
+call InsertarMascota(3, 'max', 'Macho', 'Pastor Alemán', 1,'201', 'Rabia');
+
+
+
+
