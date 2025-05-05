@@ -1,0 +1,234 @@
+db.createCollection("Alumno")
+{ ok: 1 }
+db.createCollection("Materia")
+{ ok: 1 }
+db.createCollection("Calificacion")
+{ ok: 1 }
+db.createCollection("Curso")
+{ ok: 1 }
+db.alumno.aggregate([
+  {
+    $lookup: {
+      from: "curso",
+      localField: "curso_id",
+      foreignField: "_id",
+      as: "curso"
+    }
+  },
+  { $unwind: "$curso" },
+  {
+    $lookup: {
+      from: "materia",
+      localField: "materia_ids",
+      foreignField: "_id",
+      as: "materias"
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      nombre: 1,
+      matricula: 1,
+      curso: "$curso.nombre",
+      materias: "$materias.nombre"
+    }
+  }
+]);
+db.materia.aggregate([
+  {
+    $lookup: {
+      from: "calificacion",
+      localField: "_id",
+      foreignField: "materia_id",
+      as: "calificaciones"
+    }
+  },
+  { $unwind: "$calificaciones" },
+  {
+    $lookup: {
+      from: "alumno",
+      localField: "calificaciones.alumno_id",
+      foreignField: "_id",
+      as: "alumno"
+    }
+  },
+  { $unwind: "$alumno" },
+  {
+    $project: {
+      _id: 0,
+      materia: "$nombre",
+      alumno: "$alumno.nombre",
+      valor: "$calificaciones.valor",
+      fecha: "$calificaciones.fecha"
+    }
+  }
+]);
+db.curso.insertMany([
+  {nombre: "1er Grado", nivel: "Primaria" },
+  {nombre: "2do Grado", nivel: "Primaria" },
+  {nombre: "3er Grado", nivel: "Primaria" },
+  {nombre: "4to Grado", nivel: "Primaria" },
+  {nombre: "5to Grado", nivel: "Primaria" }
+]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6818cdc54f1e0d739d06ea24'),
+    '1': ObjectId('6818cdc54f1e0d739d06ea25'),
+    '2': ObjectId('6818cdc54f1e0d739d06ea26'),
+    '3': ObjectId('6818cdc54f1e0d739d06ea27'),
+    '4': ObjectId('6818cdc54f1e0d739d06ea28')
+  }
+}
+db.materia.insertMany([
+  {nombre: "Matemáticas", codigo: "MAT101" },
+  {nombre: "Ciencias Naturales", codigo: "CIE102" },
+  {nombre: "Lengua", codigo: "LEN103" },
+  {nombre: "Historia", codigo: "HIS104" },
+  {nombre: "Geografía", codigo: "GEO105" }
+]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6818cddf4f1e0d739d06ea29'),
+    '1': ObjectId('6818cddf4f1e0d739d06ea2a'),
+    '2': ObjectId('6818cddf4f1e0d739d06ea2b'),
+    '3': ObjectId('6818cddf4f1e0d739d06ea2c'),
+    '4': ObjectId('6818cddf4f1e0d739d06ea2d')
+  }
+}
+db.alumno.insertMany([
+  {
+    nombre: "Juan Pérez",
+    matricula: "A001",
+    curso_id: ObjectId("0"),
+    materia_ids: [
+      ObjectId("1"),
+      ObjectId("2")
+    ]
+  },
+  {
+    nombre: "Laura Gómez",
+    matricula: "A002",
+    curso_id: ObjectId("1"),
+    materia_ids: [
+      ObjectId("0"),
+      ObjectId("2")
+    ]
+  },
+  {
+    nombre: "Carlos Torres",
+    matricula: "A003",
+    curso_id: ObjectId("3"),
+    materia_ids: [
+      ObjectId("3"),
+      ObjectId("4")
+    ]
+  },
+  {
+    nombre: "Ana Ruiz",
+    matricula: "A004",
+    curso_id: ObjectId("0"),
+    materia_ids: [
+      ObjectId("1"),
+      ObjectId("2")
+    ]
+  },
+  {
+    nombre: "Diego Martínez",
+    matricula: "A005",
+    curso_id: ObjectId("4"),
+    materia_ids: [
+      ObjectId("0"),
+      ObjectId("4")
+    ]
+  }
+]);
+BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+db.alumno.insertMany([
+  {
+    nombre: "Juan Pérez",
+    matricula: "A001",
+    curso_id: ObjectId("0"),
+    materia_ids: [
+      ObjectId("1"),
+      ObjectId("2")
+    ]
+  },
+  {
+    nombre: "Laura Gómez",
+    matricula: "A002",
+    curso_id: ObjectId("1"),
+    materia_ids: [
+      ObjectId("0"),
+      ObjectId("2")
+    ]
+  },
+  {
+    nombre: "Carlos Torres",
+    matricula: "A003",
+    curso_id: ObjectId("3"),
+    materia_ids: [
+      ObjectId("3"),
+      ObjectId("4")
+    ]
+  },
+  {
+    nombre: "Ana Ruiz",
+    matricula: "A004",
+    curso_id: ObjectId("0"),
+    materia_ids: [
+      ObjectId("1"),
+      ObjectId("2")
+    ]
+  },
+  {
+    nombre: "Diego Martínez",
+    matricula: "A005",
+    curso_id: ObjectId("4"),
+    materia_ids: [
+      ObjectId("0"),
+      ObjectId("4")
+    ]
+  }
+]);
+BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+db.alumno.insertMany([
+  {
+    nombre: "Juan Pérez",
+    matricula: "A001",
+    curso_id: ObjectId("6818cdc54f1e0d739d06ea24"),
+    materia_ids: [
+      ObjectId("6818cddf4f1e0d739d06ea2a"),
+      ObjectId("6818cddf4f1e0d739d06ea2b")
+    ]
+  },
+  {
+    nombre: "Laura Gómez",
+    matricula: "A002",
+    curso_id: ObjectId("6818cdc54f1e0d739d06ea25"),
+    materia_ids: [
+      ObjectId("6818cddf4f1e0d739d06ea29"),
+      ObjectId("6818cddf4f1e0d739d06ea2b")
+    ]
+  },
+  {
+    nombre: "Carlos Torres",
+    matricula: "A003",
+    curso_id: ObjectId("6818cdc54f1e0d739d06ea27"),
+    materia_ids: [
+      ObjectId("6818cddf4f1e0d739d06ea2c"),
+      ObjectId("6818cddf4f1e0d739d06ea2d")
+    ]
+  }
+]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6818d0014f1e0d739d06ea2e'),
+    '1': ObjectId('6818d0014f1e0d739d06ea2f'),
+    '2': ObjectId('6818d0014f1e0d739d06ea30')
+  }
+}
+Colegio
+
