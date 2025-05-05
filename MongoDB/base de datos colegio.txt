@@ -101,102 +101,6 @@ db.alumno.insertMany([
   {
     nombre: "Juan Pérez",
     matricula: "A001",
-    curso_id: ObjectId("0"),
-    materia_ids: [
-      ObjectId("1"),
-      ObjectId("2")
-    ]
-  },
-  {
-    nombre: "Laura Gómez",
-    matricula: "A002",
-    curso_id: ObjectId("1"),
-    materia_ids: [
-      ObjectId("0"),
-      ObjectId("2")
-    ]
-  },
-  {
-    nombre: "Carlos Torres",
-    matricula: "A003",
-    curso_id: ObjectId("3"),
-    materia_ids: [
-      ObjectId("3"),
-      ObjectId("4")
-    ]
-  },
-  {
-    nombre: "Ana Ruiz",
-    matricula: "A004",
-    curso_id: ObjectId("0"),
-    materia_ids: [
-      ObjectId("1"),
-      ObjectId("2")
-    ]
-  },
-  {
-    nombre: "Diego Martínez",
-    matricula: "A005",
-    curso_id: ObjectId("4"),
-    materia_ids: [
-      ObjectId("0"),
-      ObjectId("4")
-    ]
-  }
-]);
-BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
-db.alumno.insertMany([
-  {
-    nombre: "Juan Pérez",
-    matricula: "A001",
-    curso_id: ObjectId("0"),
-    materia_ids: [
-      ObjectId("1"),
-      ObjectId("2")
-    ]
-  },
-  {
-    nombre: "Laura Gómez",
-    matricula: "A002",
-    curso_id: ObjectId("1"),
-    materia_ids: [
-      ObjectId("0"),
-      ObjectId("2")
-    ]
-  },
-  {
-    nombre: "Carlos Torres",
-    matricula: "A003",
-    curso_id: ObjectId("3"),
-    materia_ids: [
-      ObjectId("3"),
-      ObjectId("4")
-    ]
-  },
-  {
-    nombre: "Ana Ruiz",
-    matricula: "A004",
-    curso_id: ObjectId("0"),
-    materia_ids: [
-      ObjectId("1"),
-      ObjectId("2")
-    ]
-  },
-  {
-    nombre: "Diego Martínez",
-    matricula: "A005",
-    curso_id: ObjectId("4"),
-    materia_ids: [
-      ObjectId("0"),
-      ObjectId("4")
-    ]
-  }
-]);
-BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
-db.alumno.insertMany([
-  {
-    nombre: "Juan Pérez",
-    matricula: "A001",
     curso_id: ObjectId("6818cdc54f1e0d739d06ea24"),
     materia_ids: [
       ObjectId("6818cddf4f1e0d739d06ea2a"),
@@ -230,5 +134,5 @@ db.alumno.insertMany([
     '2': ObjectId('6818d0014f1e0d739d06ea30')
   }
 }
-Colegio
+
 
